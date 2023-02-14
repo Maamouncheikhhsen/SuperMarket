@@ -6,14 +6,11 @@ namespace SuperMarket.Entities
     public class InvoiceLineEntity
     {
         public Guid InvoiceLineID { get; set; }
-
         public int Quantity { get; set; }
-
         public decimal UnitPrice { get; set; }
-
-        public Guid ProductID { get; set; }
-
+        public virtual ICollection<ProductInvoiceLineEntity> ProductInvoiceLineEntities { get; set; }
         public Guid InvoiceID { get; set; }
+        public InvoiceEntity Invoice { get; set; }
 
     }
 }

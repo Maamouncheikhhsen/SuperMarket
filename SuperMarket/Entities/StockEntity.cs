@@ -7,6 +7,8 @@ namespace SuperMarket.Entities
     {
         public Guid StockID { get; set; }
         public int Quantity { get; set; }
-        public Guid ProductID { get; set; }
+
+        public virtual ICollection<StockProductEntity> StockProducts { get; set; }
+
     }
 }
