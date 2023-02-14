@@ -26,7 +26,7 @@ builder.WebHost.ConfigureLogging((hostingContext, logging) =>
     logging.AddNLog(hostingContext.Configuration.GetSection("Logging"));
 });
 
-builder.Services.AddDbContext<SuperMarketDbContext>(options =>
+builder.Services.AddDbContext<SuperMarketDataBaseFirstContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("SuperMarketConnectionString")));
 
 var app = builder.Build();
