@@ -2,7 +2,7 @@ using SuperMarket.Data;
 using Microsoft.EntityFrameworkCore;
 using NLog.Extensions.Logging;
 using NLog.Web;
-
+using _Eaton_IMRSYS_Kernel.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +37,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseCors("corsapp");

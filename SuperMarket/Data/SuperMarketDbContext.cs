@@ -17,5 +17,6 @@ namespace SuperMarket.Data
         public DbSet<InvoiceLineEntity> InvoiceLines { get; set; }
         public DbSet<CustomerEntity> Customers { get; set; }
         public DbSet<PayEntity> Pays { get; set; }
+        public DbSet<ProductInvoiceLineEntity> ProductsInvoicesLines { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using SuperMarket.Data;
 namespace SuperMarket.Migrations
 {
     [DbContext(typeof(SuperMarketDbContext))]
-    [Migration("20230213093439_ChangeRelationship_one_to_one_between_Pay_and_Invoice_Entities")]
-    partial class ChangeRelationshiponetoonebetweenPayandInvoiceEntities
+    [Migration("20230216085939_InitialCreation")]
+    partial class InitialCreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,9 +104,6 @@ namespace SuperMarket.Migrations
                     b.Property<Guid>("InvoiceID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ProductID")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -116,8 +113,6 @@ namespace SuperMarket.Migrations
                     b.HasKey("InvoiceLineID");
 
                     b.HasIndex("InvoiceID");
-
-                    b.HasIndex("ProductID");
 
                     b.ToTable("InvoiceLines");
                 });
@@ -145,16 +140,20 @@ namespace SuperMarket.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("BarCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("CategoryID")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("ProductPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ProductID");
 
@@ -163,14 +162,43 @@ namespace SuperMarket.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("SuperMarket.Entities.ProductInvoiceLineEntity", b =>
+                {
+                    b.Property<Guid>("ProductInvoiceLineID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("InvoiceLineID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ProductInvoiceLineID");
+
+                    b.HasIndex("InvoiceLineID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("ProductsInvoicesLines");
+                });
+
             modelBuilder.Entity("SuperMarket.Entities.StockEntity", b =>
                 {
                     b.Property<Guid>("StockID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Quantity")
+                    b.Property<string>("LocationStock")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductQuantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("StockName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StockID");
 
@@ -225,15 +253,7 @@ namespace SuperMarket.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SuperMarket.Entities.ProductEntity", "Product")
-                        .WithMany("InvoiceLines")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Invoice");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("SuperMarket.Entities.ProductEntity", b =>
@@ -245,6 +265,25 @@ namespace SuperMarket.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("SuperMarket.Entities.ProductInvoiceLineEntity", b =>
+                {
+                    b.HasOne("SuperMarket.Entities.InvoiceLineEntity", "InvoiceLine")
+                        .WithMany("ProductInvoiceLineEntities")
+                        .HasForeignKey("InvoiceLineID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SuperMarket.Entities.ProductEntity", "Product")
+                        .WithMany("ProductInvoiceLineEntities")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InvoiceLine");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("SuperMarket.Entities.StockProductEntity", b =>
@@ -281,6 +320,11 @@ namespace SuperMarket.Migrations
                     b.Navigation("InvoiceLines");
                 });
 
+            modelBuilder.Entity("SuperMarket.Entities.InvoiceLineEntity", b =>
+                {
+                    b.Navigation("ProductInvoiceLineEntities");
+                });
+
             modelBuilder.Entity("SuperMarket.Entities.PayEntity", b =>
                 {
                     b.Navigation("Invoices")
@@ -289,7 +333,7 @@ namespace SuperMarket.Migrations
 
             modelBuilder.Entity("SuperMarket.Entities.ProductEntity", b =>
                 {
-                    b.Navigation("InvoiceLines");
+                    b.Navigation("ProductInvoiceLineEntities");
 
                     b.Navigation("StockProducts");
                 });

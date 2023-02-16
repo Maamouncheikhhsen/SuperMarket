@@ -18,7 +18,7 @@ namespace SuperMarket.Entities
 
         public virtual ICollection<ProductInvoiceLineEntity> ProductInvoiceLineEntities { get; set; }
 
-        [Required]
+       // [Required]
         public Guid InvoiceID { get; set; }
 
         [ForeignKey(nameof(InvoiceID))]

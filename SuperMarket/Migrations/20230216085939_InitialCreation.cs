@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SuperMarket.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreateDB : Migration
+    public partial class InitialCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,8 +55,9 @@ namespace SuperMarket.Migrations
                 columns: table => new
                 {
                     StockID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    ProductID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    StockName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LocationStock = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductQuantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,9 +70,9 @@ namespace SuperMarket.Migrations
                 {
                     ProductID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    BarCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    StockID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ProductPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -112,24 +113,25 @@ namespace SuperMarket.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductEntityStockEntity",
+                name: "StockProducts",
                 columns: table => new
                 {
-                    ProductID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StockID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    StockProductID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StockID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductEntityStockEntity", x => new { x.ProductID, x.StockID });
+                    table.PrimaryKey("PK_StockProducts", x => x.StockProductID);
                     table.ForeignKey(
-                        name: "FK_ProductEntityStockEntity_Products_StockID",
-                        column: x => x.StockID,
+                        name: "FK_StockProducts_Products_ProductID",
+                        column: x => x.ProductID,
                         principalTable: "Products",
                         principalColumn: "ProductID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductEntityStockEntity_Stocks_ProductID",
-                        column: x => x.ProductID,
+                        name: "FK_StockProducts_Stocks_StockID",
+                        column: x => x.StockID,
                         principalTable: "Stocks",
                         principalColumn: "StockID",
                         onDelete: ReferentialAction.Cascade);
@@ -142,7 +144,6 @@ namespace SuperMarket.Migrations
                     InvoiceLineID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ProductID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     InvoiceID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -154,8 +155,27 @@ namespace SuperMarket.Migrations
                         principalTable: "Invoices",
                         principalColumn: "InvoiceID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductsInvoicesLines",
+                columns: table => new
+                {
+                    ProductInvoiceLineID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    InvoiceLineID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductsInvoicesLines", x => x.ProductInvoiceLineID);
                     table.ForeignKey(
-                        name: "FK_InvoiceLines_Products_ProductID",
+                        name: "FK_ProductsInvoicesLines_InvoiceLines_InvoiceLineID",
+                        column: x => x.InvoiceLineID,
+                        principalTable: "InvoiceLines",
+                        principalColumn: "InvoiceLineID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductsInvoicesLines_Products_ProductID",
                         column: x => x.ProductID,
                         principalTable: "Products",
                         principalColumn: "ProductID",
@@ -168,11 +188,6 @@ namespace SuperMarket.Migrations
                 column: "InvoiceID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceLines_ProductID",
-                table: "InvoiceLines",
-                column: "ProductID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Invoices_CustomerID",
                 table: "Invoices",
                 column: "CustomerID");
@@ -180,30 +195,46 @@ namespace SuperMarket.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_PayID",
                 table: "Invoices",
-                column: "PayID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductEntityStockEntity_StockID",
-                table: "ProductEntityStockEntity",
-                column: "StockID");
+                column: "PayID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryID",
                 table: "Products",
                 column: "CategoryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsInvoicesLines_InvoiceLineID",
+                table: "ProductsInvoicesLines",
+                column: "InvoiceLineID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsInvoicesLines_ProductID",
+                table: "ProductsInvoicesLines",
+                column: "ProductID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockProducts_ProductID",
+                table: "StockProducts",
+                column: "ProductID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockProducts_StockID",
+                table: "StockProducts",
+                column: "StockID");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ProductsInvoicesLines");
+
+            migrationBuilder.DropTable(
+                name: "StockProducts");
+
+            migrationBuilder.DropTable(
                 name: "InvoiceLines");
-
-            migrationBuilder.DropTable(
-                name: "ProductEntityStockEntity");
-
-            migrationBuilder.DropTable(
-                name: "Invoices");
 
             migrationBuilder.DropTable(
                 name: "Products");
@@ -212,13 +243,16 @@ namespace SuperMarket.Migrations
                 name: "Stocks");
 
             migrationBuilder.DropTable(
+                name: "Invoices");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
+
+            migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "Pays");
-
-            migrationBuilder.DropTable(
-                name: "Categories");
         }
     }
 }

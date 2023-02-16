@@ -17,13 +17,13 @@ namespace SuperMarket.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalAmount { get; set; }
 
-        [Required]
+        //[Required]
         public Guid CustomerID { get; set; }
 
         [ForeignKey(nameof(CustomerID))]
         public CustomerEntity Customer { get; set; }
 
-        [Required]
+       // [Required]
         public Guid PayID { get; set; }
 
         [ForeignKey(nameof(PayID))]

@@ -137,16 +137,20 @@ namespace SuperMarket.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("BarCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("CategoryID")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("ProductPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ProductID");
 
@@ -173,7 +177,7 @@ namespace SuperMarket.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductInvoiceLineEntity");
+                    b.ToTable("ProductsInvoicesLines");
                 });
 
             modelBuilder.Entity("SuperMarket.Entities.StockEntity", b =>
@@ -182,8 +186,16 @@ namespace SuperMarket.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Quantity")
+                    b.Property<string>("LocationStock")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductQuantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("StockName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StockID");
 
