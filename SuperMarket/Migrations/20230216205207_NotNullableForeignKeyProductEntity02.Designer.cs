@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperMarket.Data;
 
@@ -11,9 +12,11 @@ using SuperMarket.Data;
 namespace SuperMarket.Migrations
 {
     [DbContext(typeof(SuperMarketDbContext))]
-    partial class SuperMarketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230216205207_NotNullableForeignKeyProductEntity02")]
+    partial class NotNullableForeignKeyProductEntity02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,10 +211,10 @@ namespace SuperMarket.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ProductID")
+                    b.Property<Guid>("ProductID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("StockID")
+                    b.Property<Guid>("StockID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("StockProductID");
@@ -285,11 +288,15 @@ namespace SuperMarket.Migrations
                 {
                     b.HasOne("SuperMarket.Entities.ProductEntity", "Product")
                         .WithMany("StockProducts")
-                        .HasForeignKey("ProductID");
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SuperMarket.Entities.StockEntity", "Stock")
                         .WithMany("StockProducts")
-                        .HasForeignKey("StockID");
+                        .HasForeignKey("StockID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Product");
 

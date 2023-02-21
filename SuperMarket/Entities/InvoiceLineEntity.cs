@@ -16,7 +16,7 @@ namespace SuperMarket.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal UnitPrice { get; set; }
 
-        public virtual ICollection<ProductInvoiceLineEntity> ProductInvoiceLineEntities { get; set; }
+        public virtual ICollection<ProductInvoiceLineEntity> ProductInvoiceLineEntities { get; set; } = new List<ProductInvoiceLineEntity>();
 
        // [Required]
         public Guid InvoiceID { get; set; }

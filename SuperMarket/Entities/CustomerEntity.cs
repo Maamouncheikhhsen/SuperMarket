@@ -18,7 +18,7 @@ namespace SuperMarket.Entities
 
         [MaxLength(20)]
         public string PhoneNumber { get; set; }
-        public virtual ICollection<InvoiceEntity> Invoices { get; set; }
+        public virtual ICollection<InvoiceEntity> Invoices { get; set; }= new List<InvoiceEntity>();
     }
 
 }

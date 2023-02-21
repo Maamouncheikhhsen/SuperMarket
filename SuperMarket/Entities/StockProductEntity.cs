@@ -6,14 +6,14 @@ namespace SuperMarket.Entities
     {
         [Key]
         public Guid StockProductID { get; set; }
-        public Guid StockID { get; set; }
+        public Guid? StockID { get; set; }
 
         [ForeignKey(nameof(StockID))]
-        public StockEntity Stock { get; set; }
+        public StockEntity? Stock { get; set; }
         
-        public Guid ProductID { get; set; }
+        public Guid? ProductID { get; set; }
 
         [ForeignKey("ProductID")]
-        public ProductEntity Product { get; set; }
+        public ProductEntity? Product { get; set; }
     }
 }

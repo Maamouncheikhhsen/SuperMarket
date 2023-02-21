@@ -18,17 +18,18 @@ namespace SuperMarket.Entities
         public string BarCode { get; set; }
 
         //[Required]
-        public Guid CategoryID { get; set; }
+        
+        public Guid? CategoryID { get; set; }
 
-        [ForeignKey (nameof(CategoryID))]
-        public CategoryEntity Category { get; set; }
+        [ForeignKey(nameof(CategoryID))]
+        public CategoryEntity? Category { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal ProductPrice { get; set; }
-        public virtual ICollection<StockProductEntity> StockProducts { get; set; }
+        public virtual ICollection<StockProductEntity>? StockProducts { get; set; }=new List<StockProductEntity>();
 
-        public virtual  ICollection<ProductInvoiceLineEntity> ProductInvoiceLineEntities { get; set; }
+        public virtual ICollection<ProductInvoiceLineEntity>? ProductInvoiceLineEntities { get; set; } = new List<ProductInvoiceLineEntity>();
 
     }
 }

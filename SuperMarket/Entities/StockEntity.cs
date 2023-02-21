@@ -9,14 +9,14 @@ namespace SuperMarket.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid StockID { get; set; }
 
-        [Required]
+       // [Required]
         public string StockName { get; set; }
 
-        [Required]
+       // [Required]
         public string LocationStock { get; set; }
 
        // [Required]
         public int ProductQuantity { get; set; }
-        public virtual ICollection<StockProductEntity> StockProducts { get; set; }
+        public virtual ICollection<StockProductEntity>? StockProducts { get; set; }=new List<StockProductEntity>();
     }
 }

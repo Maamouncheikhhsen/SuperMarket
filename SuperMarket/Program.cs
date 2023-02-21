@@ -3,8 +3,34 @@ using Microsoft.EntityFrameworkCore;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using _Eaton_IMRSYS_Kernel.Middlewares;
+using SuperMarket.Services;
+using SuperMarket.Interfaces;
+using SuperMarket.Entities;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddScoped(typeof(IProductService<>), typeof(ProductService<>));
+builder.Services.AddScoped<ICategoryService<CategoryEntity>, CategoryService>();
+builder.Services.AddScoped<IStockService<StockEntity>, StockService<StockEntity>>();
+builder.Services.AddScoped<IStockProductService<StockProductEntity>, StockProductService<StockProductEntity>>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+    });
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
+
+
+
 
 // Add services to the container.
 
@@ -44,5 +70,9 @@ app.UseCors("corsapp");
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+
+
 
 app.Run();

@@ -29,7 +29,7 @@ namespace SuperMarket.Entities
         [ForeignKey(nameof(PayID))]
         public PayEntity Pay { get; set; }
 
-        public virtual ICollection<InvoiceLineEntity> InvoiceLines { get; set; }
+        public virtual ICollection<InvoiceLineEntity> InvoiceLines { get; set; } = new List<InvoiceLineEntity>();
 
     }
 
