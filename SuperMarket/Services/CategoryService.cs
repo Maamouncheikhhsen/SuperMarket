@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SuperMarket.Data;
 using SuperMarket.Entities;
 using SuperMarket.Interfaces;
@@ -10,10 +11,12 @@ namespace SuperMarket.Services
     public class CategoryService:ICategoryService<CategoryEntity>
     {
         protected SuperMarketDbContext _context;
+        private readonly ILogger<CategoryService> _logger;
 
-        public CategoryService(SuperMarketDbContext context)
+        public CategoryService(SuperMarketDbContext context, ILogger<CategoryService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IEnumerable<CategoryEntity> GetAllCategories()
@@ -23,7 +26,18 @@ namespace SuperMarket.Services
 
         public CategoryEntity GetCategoryById(Guid id)
         {
-            return _context.Categories.FirstOrDefault(c => c.CategoryID == id);
+
+            return _context.Categories
+              .Include(p => p.Products)             
+               .FirstOrDefault(c => c.CategoryID == id);
+        }
+
+        public CategoryEntity GetCategoryByCategoryName(string categoryName)
+        {
+
+            return _context.Categories
+               .Include(p => p.Products)
+                .FirstOrDefault(c => c.CategoryName == categoryName);
         }
 
         public async Task <CategoryEntity> GetCategoryByName (string categoryName)

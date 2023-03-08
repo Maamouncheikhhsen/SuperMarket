@@ -9,8 +9,11 @@ namespace SuperMarket.Interfaces
         IEnumerable<T> GetAllCategories();
         T GetCategoryById(Guid id);
         // T GetCategoryByName(string categoryName);
-        Task<T> GetCategoryByName(string categoryName);
-        T AddCategory(T category);
+
+       T GetCategoryByCategoryName(string categoryName);
+        
+       Task<T> GetCategoryByName(string categoryName);
+            T AddCategory(T category);
         //void UpdateCategory(T category);
        // Task<T> UpdateCategoryAsync(T category);
         void DeleteCategory(T category);

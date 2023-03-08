@@ -34,10 +34,10 @@ namespace SuperMarket.Controllers
             return Ok(category);
         }
 
-        [HttpGet("name/{name}", Name = "GetCategoryByName")]
-        public IActionResult GetCategoryByName(string name)
+        [HttpGet("CategoryName/{categoryname}", Name = "GetCategoryByCategroyName")]
+        public IActionResult GetCategoryByCatName(string Categoryname)
         {
-            var category = _categoryService.GetCategoryByName(name);
+            var category = _categoryService.GetCategoryByCategoryName(Categoryname);
             if (category == null)
             {
                 return NotFound();
@@ -45,6 +45,19 @@ namespace SuperMarket.Controllers
 
             return Ok(category);
         }
+
+
+        //[HttpGet("name/{name}", Name = "GetCategoryByName")]
+        //public IActionResult GetCategoryByName(string name)
+        //{
+        //    var category = _categoryService.GetCategoryByName(name);
+        //    if (category == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(category);
+        //}
 
         [HttpPost]
         public IActionResult AddCategory([FromBody] CategoryEntity category)
